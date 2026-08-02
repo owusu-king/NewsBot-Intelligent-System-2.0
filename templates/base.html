@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>{% block title %}NewsBot Intelligence System{% endblock %}</title>
+    <link href="{% static 'vendor/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        :root {
+            --nb-navy: #0f2740;
+            --nb-blue: #1d6fa5;
+            --nb-accent: #ef8354;
+            --nb-bg: #f6f8fa;
+        }
+        body { background: var(--nb-bg); font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        /* ---- Custom nav (no dependency on bootstrap.js loading) ---- */
+        .nb-navbar { background: var(--nb-navy); padding: 0.7rem 0; }
+        .nb-navbar .nb-navbar-inner {
+            max-width: 1140px; margin: 0 auto; padding: 0 1rem;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+        }
+        .nb-brand { color: #fff !important; text-decoration: none; font-weight: 700; font-size: 1.15rem; }
+        .nb-toggle {
+            display: none; background: transparent; border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 6px; color: #fff; font-size: 1.2rem; padding: 0.3rem 0.6rem; cursor: pointer;
+        }
+        .nb-links { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+        .nb-links a { color: #fff !important; text-decoration: none; font-size: 0.95rem; }
+        .nb-links a:hover { color: var(--nb-accent) !important; }
+
+        @media (max-width: 860px) {
+            .nb-toggle { display: inline-block; }
+            .nb-links {
+                display: none; flex-direction: column; width: 100%;
+                gap: 0; margin-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.15);
+            }
+            .nb-links.nb-open { display: flex; }
+            .nb-links a { display: block; padding: 0.65rem 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        }
+
+        .card-nb { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(15,39,64,0.08); }
+        .badge-category { background: var(--nb-blue); }
+        .badge-positive { background: #2e7d32; }
+        .badge-negative { background: #c62828; }
+        .badge-neutral { background: #757575; }
+        .btn-nb { background: var(--nb-blue); color: #fff; border: none; }
+        .btn-nb:hover { background: var(--nb-navy); color: #fff; }
+        footer { color: #8a94a6; font-size: 0.85rem; }
+
+        /* ---- General mobile polish ---- */
+        @media (max-width: 576px) {
+            .container { padding-left: 1rem; padding-right: 1rem; }
+            h2 { font-size: 1.4rem; }
+            .card-nb { padding: 1rem !important; }
+            .fs-2 { font-size: 1.5rem !important; }
+        }
+        .table-responsive { -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body>
+<nav class="nb-navbar mb-4">
+    <div class="nb-navbar-inner">
+        <a class="nb-brand" href="{% url 'newsbot_app:dashboard' %}">
+            📰 NewsBot 2.0
+        </a>
+        <button class="nb-toggle" id="nbNavToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nbNavLinks">
+            ☰
+        </button>
+        <ul class="nb-links" id="nbNavLinks">
+            <li><a href="{% url 'newsbot_app:dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'newsbot_app:analyze' %}">Analyze Article</a></li>
+            <li><a href="{% url 'newsbot_app:query' %}">Ask NewsBot</a></li>
+            <li><a href="{% url 'newsbot_app:batch' %}">Batch Processing</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="container text-center pb-4">
+    NewsBot Intelligence System 2.0 &mdash; ITAI 2373 Final Project
+</footer>
+
+<script>
+    // Plain vanilla JS toggle - does not depend on any external script loading,
+    // so the mobile nav always works even if a CDN is slow/blocked.
+    document.getElementById('nbNavToggle').addEventListener('click', function () {
+        var links = document.getElementById('nbNavLinks');
+        var isOpen = links.classList.toggle('nb-open');
+        this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+</script>
+<script src="{% static 'vendor/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

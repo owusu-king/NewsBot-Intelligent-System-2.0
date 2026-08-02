@@ -1,0 +1,10 @@
+# Copy this file to `.env` (or export as real environment variables) and
+# fill in your own keys. NEVER commit a file with real keys to GitHub.
+#
+# Only needed if you enable the optional online/premium backends;
+# the system works fully offline without any of these.
+
+GOOGLE_TRANSLATE_API_KEY=
+HUGGINGFACE_API_TOKEN=
+DJANGO_SECRET_KEY=replace-with-a-long-random-string
+DJANGO_DEBUG=True

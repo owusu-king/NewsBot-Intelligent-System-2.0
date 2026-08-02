@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - NewsBot 2.0{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <h2 class="fw-bold" style="color: var(--nb-navy);">Intelligence Dashboard</h2>
+    <div class="text-muted small text-end">
+        <div>🗄️ {{ dataset_source }}</div>
+        {% if model_trained_at %}<div>Model last trained: {{ model_trained_at }}</div>{% endif %}
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card card-nb p-3 text-center">
+            <div class="text-muted small">Total Articles</div>
+            <div class="fs-2 fw-bold" style="color: var(--nb-blue);">{{ summary.n_articles }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-nb p-3 text-center">
+            <div class="text-muted small">Best Classifier</div>
+            <div class="fs-5 fw-bold">{{ summary.best_classifier }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-nb p-3 text-center">
+            <div class="text-muted small">Classifier F1-Score</div>
+            <div class="fs-2 fw-bold text-success">{{ summary.classifier_f1 }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-nb p-3 text-center">
+            <div class="text-muted small">Avg. Sentiment</div>
+            <div class="fs-2 fw-bold">{{ summary.overall_sentiment_avg }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card card-nb p-3">
+            <h5 class="mb-3">Articles by Category</h5>
+            <div class="table-responsive"><table class="table table-sm">
+                <thead><tr><th>Category</th><th>Count</th></tr></thead>
+                <tbody>
+                {% for cat, count in category_counts.items %}
+                    <tr><td><span class="badge badge-category">{{ cat }}</span></td><td>{{ count }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-nb p-3">
+            <h5 class="mb-3">Average Sentiment by Category</h5>
+            <div class="table-responsive"><table class="table table-sm">
+                <thead><tr><th>Category</th><th>Avg. Compound Score</th></tr></thead>
+                <tbody>
+                {% for cat, score in sentiment_by_category.items %}
+                    <tr><td>{{ cat }}</td><td>{{ score|floatformat:3 }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-nb p-3 mt-3">
+    <h5 class="mb-3">🧩 Discovered Topics (LDA)</h5>
+    <div class="row">
+        {% for t in topics %}
+        <div class="col-md-4 mb-2">
+            <div class="border rounded p-2">
+                <strong>Topic {{ t.topic }}</strong><br>
+                <span class="text-muted small">{{ t.top_words }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

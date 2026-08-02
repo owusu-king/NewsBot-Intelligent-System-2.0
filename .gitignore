@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+db.sqlite3
+staticfiles/
+.env
+data/raw/*.csv
+!data/sample/*.csv
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+reports/
+docs/

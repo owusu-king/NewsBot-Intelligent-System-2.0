@@ -1,0 +1,6 @@
+{
+  "trained_at": "2026-08-01T13:29:11.252435+00:00",
+  "dataset_source": "Real BBC Kaggle dataset: /home/king/Desktop/ITAI2373-NewsBot-Final/data/raw/BBC News Train.csv",
+  "n_articles": 1490,
+  "best_classifier": "Naive Bayes"
+}

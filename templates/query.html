@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Ask NewsBot - NewsBot 2.0{% endblock %}
+{% block content %}
+
+<h2 class="fw-bold mb-2" style="color: var(--nb-navy);">Ask NewsBot</h2>
+<p class="text-muted">Try: "Show me positive tech news from this week" or "how many negative sport articles?"</p>
+
+{% if active_filters %}
+<div class="card card-nb p-3 mb-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+            <strong class="me-2">Active filters:</strong>
+            {% for key, value in active_filters.items %}
+                <span class="badge bg-secondary me-1">{{ key }}: {{ value }}</span>
+            {% endfor %}
+            <span class="text-muted small ms-2">(these carry over to your next question)</span>
+        </div>
+        <form method="post" class="mt-2 mt-md-0">
+            {% csrf_token %}
+            <input type="hidden" name="query" value="clear filters">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">&#10005; Clear filters</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<div class="card card-nb p-3 mb-4">
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            {{ form.query }}
+            <button type="submit" class="btn btn-nb">&#10148; Ask</button>
+        </div>
+    </form>
+</div>
+
+{% if response %}
+<div class="card card-nb p-3 mb-4">
+    <h5>&#129302; NewsBot says:</h5>
+    <p class="fs-5">{{ response.message }}</p>
+
+    {% if response.suggested_follow_ups %}
+    <div class="mb-2">
+        <span class="text-muted small d-block mb-1">Try next:</span>
+        {% for s in response.suggested_follow_ups %}
+        <form method="post" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="query" value="{{ s }}">
+            <button type="submit" class="btn btn-sm btn-outline-primary me-1 mb-1">{{ s }}</button>
+        </form>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if response.results_preview %}
+    <h6 class="mt-3">
+        Matching articles &mdash; showing {{ response.results_preview|length }} of {{ response.n_results }} total
+    </h6>
+    <div class="accordion" id="resultsAccordion">
+        {% for r in response.results_preview %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result{{ forloop.counter }}">
+                    <span class="badge badge-category me-2">{{ r.category }}</span>
+                    {% if r.sentiment_label %}<span class="badge badge-{{ r.sentiment_label }} me-2">{{ r.sentiment_label }}</span>{% endif %}
+                    {{ r.title|default:"(untitled)"|truncatechars:60 }}
+                </button>
+            </h2>
+            <div id="result{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#resultsAccordion">
+                <div class="accordion-body">
+                    <p>{{ r.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if response.n_results > response.results_preview|length %}
+    <p class="text-muted small mt-2">
+        Only the first {{ response.results_preview|length }} are shown here. Try narrowing your question
+        (e.g. add a category or sentiment) to see a more focused set.
+    </p>
+    {% endif %}
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="card card-nb p-3">
+    <h6 class="text-muted">Recent Queries (all users, for demo purposes)</h6>
+    <ul class="list-group list-group-flush">
+        {% for h in history %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>{{ h.query_text }}</span>
+            <span class="text-muted small">{{ h.n_results }} results</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No queries yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

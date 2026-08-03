@@ -1,4 +1,5 @@
 # NewsBot Intelligence System 2.0
+https://newsbot-intelligent-system-2-0.onrender.com
 
 **ITAI 2373 - Final Project** | Advanced NLP Integration and Analysis Platform
 
